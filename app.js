@@ -9,7 +9,7 @@ var usersRouter = require('./routes/users');
 var articlesRouter = require('./routes/articles');
 
 // mongodb connect
-mongoose.connect("mongodb://localhost:27017/jwtAuth", { useNewUrlParser: true, useUnifiedTopology: true },(err)=>{
+mongoose.connect(process.env.URI, { useNewUrlParser: true, useUnifiedTopology: true },(err)=>{
     console.log("connected", err ? err: true);   
 })
 
