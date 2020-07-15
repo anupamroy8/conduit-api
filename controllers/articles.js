@@ -60,13 +60,16 @@ exports.createArticle = async (req, res, next) => {
     var article = await Article.create(req.body.article);
     console.log(article);
     article.tagList.forEach((tag) => {
+      console.log(tag,"taggg")
       Tag.findOne({ tagName: tag }, (err, tagToFind) => {
         if (err) return res.json({ success: false, err });
+        console.log(tagToFind,"tagToFind")
         if (tagToFind) {
           Tag.findOneAndUpdate(
             { tagName: tag },
             { $push: { article: article._id } },
             (err, updatedArticle) => {
+              console.log(updatedArticle,"updatedArticle")
               if (err) return res.json({ success: false, err });
             }
           );
@@ -74,6 +77,7 @@ exports.createArticle = async (req, res, next) => {
           Tag.create(
             { tagName: tag, article: article._id },
             (err, createdTag) => {
+              console.log(createdTag,"createdTag")
               if (err) return res.json({ success: false, err });
             }
           );
@@ -109,8 +113,8 @@ exports.getSingleArticle = async (req, res, next) => {
 exports.updateSingleArticle = async (req, res, next) => {
   try {
     var user = await User.findById(req.user.userId);
-    if(user) req.body.article.author = user.id;
-    
+    if (user) req.body.article.author = user.id;
+
     if (req.body.article.title) {
       req.body.article.slug = slug(req.body.article.title, { lower: true });
     }

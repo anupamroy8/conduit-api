@@ -1,31 +1,36 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var mongoose = require("mongoose")
-require('dotenv').config()
+var express = require("express");
+var cors = require("cors");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+var mongoose = require("mongoose");
 
+require("dotenv").config();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var articlesRouter = require('./routes/articles');
+var indexRouter = require("./routes/index");
+var usersRouter = require("./routes/users");
+var articlesRouter = require("./routes/articles");
 
 // mongodb connect
-mongoose.connect(process.env.URI, { useNewUrlParser: true, useUnifiedTopology: true },(err)=>{
-    console.log("connected", err ? err: true);   
-})
+mongoose.connect(
+  process.env.URI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
+    console.log("connected", err ? err : true);
+  }
+);
 
 var app = express();
 
-app.use(logger('dev'));
+app.use(cors());
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/', indexRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/articles', articlesRouter);
-
+app.use("/", indexRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/articles", articlesRouter);
 
 module.exports = app;
