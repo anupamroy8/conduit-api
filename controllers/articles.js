@@ -2,6 +2,7 @@
 
 const Article = require("../models/article");
 const User = require("../models/user");
+const Tag = require("../models/tag");
 
 // Feed article
 exports.feedArticle = async (req, res, next) => {
@@ -58,18 +59,17 @@ exports.createArticle = async (req, res, next) => {
 
     req.body.article.author = user._id;
     var article = await Article.create(req.body.article);
-    console.log(article);
+    // console.log(article);
     article.tagList.forEach((tag) => {
-      console.log(tag,"taggg")
       Tag.findOne({ tagName: tag }, (err, tagToFind) => {
         if (err) return res.json({ success: false, err });
-        console.log(tagToFind,"tagToFind")
+        console.log(tagToFind, "tagToFind");
         if (tagToFind) {
           Tag.findOneAndUpdate(
             { tagName: tag },
             { $push: { article: article._id } },
             (err, updatedArticle) => {
-              console.log(updatedArticle,"updatedArticle")
+              console.log(updatedArticle, "updatedArticle");
               if (err) return res.json({ success: false, err });
             }
           );
@@ -77,7 +77,7 @@ exports.createArticle = async (req, res, next) => {
           Tag.create(
             { tagName: tag, article: article._id },
             (err, createdTag) => {
-              console.log(createdTag,"createdTag")
+              console.log(createdTag, "createdTag");
               if (err) return res.json({ success: false, err });
             }
           );
